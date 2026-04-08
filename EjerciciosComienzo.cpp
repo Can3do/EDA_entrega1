@@ -1,7 +1,87 @@
 #include "EjerciciosComienzo.h"
 
+//Funciones aux
+
+/*
+PRE: Recibe un string
+
+POS: Devuelve el largo del string incluyendo al caracter '\0'
+*/
+int largoString(char* str) { //función aux
+	int i = 1;
+	while (str[i - 1] != '\0') {
+		i++;
+	}
+	return i;
+}
+
+/*
+PRE:  Recibe un mapa representado por una matriz, de dimensiones col x fil, en la cual 'A' representa un lugar donde hay agua, y 'T' donde hay tierra
+	  también recibe cuatro enteros, los primeros dos son las coordenadas (indices) de una 'T' y los siguientes dos son la cantidad de columnas y filas
+	  que tiene el mapa respectivamente.
+POS:  Modifica al mapa que se le ha pasado "explorando" toda la isla en la que se encuentre la 'T' que se le ha pasado, donde se encuentre una 'T',
+	  se pondrá una 'A'.
+	  */
+void explorarIsla(char** mapa, int i, int j, int col, int fil) { // funcion aux
+	mapa[i][j] = 'A';
+	for (int k = i - 1; k <= i + 1; k++) {
+		for (int l = j - 1; l <= j + 1; l++) {
+			if (k >= 0 && k < col && l >= 0 && l < fil) {
+				if (mapa[k][l] == 'T') {
+					explorarIsla(mapa, k, l, col, fil);
+				}
+			}
+
+		}
+	}
+}
+
+/*
+PRE: Recibe dos strings
+
+POS: Devuelve en forma de booleano si el segundo string que se le pasa es un subString del primero
+*/
+bool esSubstring(char* str, char* substr) { // funcion aux
+	int largosubstr = 0;
+	for (int z = 0; substr[z] != '\0'; z++) {
+		largosubstr++;
+	}
+
+	int vanSeguidas = 0;
+	for (int j = 0; j < largosubstr; j++) {
+		for (int i = j; str[i] != '\0'; i++) {
+			if (str[i] == substr[vanSeguidas]) {
+				vanSeguidas++;
+				if (vanSeguidas == largosubstr) {
+					return true;
+				}
+			}
+			else {
+				vanSeguidas = 0;
+			}
+		}
+	}
+
+	return false;
+}
+
+/*
+PRE: Recibe dos strings
+
+POS: Copia todos los caracteres del primer string al segundo, incluyendo el '\0'
+*/
+void copiarString(char* strOrigen, char* strDestino) { //funcion aux
+	int i = 0;
+	while (strOrigen[i] != '\0') {
+		strDestino[i] = strOrigen[i];
+		i++;
+	}
+	strDestino[i] = '\0';
+}
+
+
 int suma(int a, int b) {
-    return a + b;
+	return a + b;
 }
 
 void tablaDel(unsigned int tablaDel, unsigned int desde, unsigned int hasta) { // paso tests
@@ -44,6 +124,22 @@ int valorAbsoluto(int n) {
 	return n;
 }
 
+/*
+PRE: Recibe dos strings
+
+POS: Devuelve true si el primer string "precede al segundo", en otro caso devuelve false
+*/
+bool ordenStr(char* str1, char* str2) { // funcion aux
+	int i = 0;
+	while (true) {
+		if (str1[i] == '\0' || str2[i] == '\0') return false;
+		if (str1[i] < str2[i]) return true;
+		if (str1[i] > str2[i]) return false;
+		i++;
+	}
+	return false;
+}
+
 void simplificar(int n, int d) {
 	if (n == 0) {
 		cout << n << "/" << d << endl;
@@ -55,7 +151,7 @@ void simplificar(int n, int d) {
 	int mcd = mcdEuclides(n, d);
 	n /= mcd;
 	d /= mcd;
-	
+
 	if (esNegativo) cout << "-";
 	cout << n << "/" << d << endl;
 }
@@ -89,10 +185,10 @@ int maximoNumero(unsigned int n) { //paso test
 		cin >> valor;
 		if (valor > maximo) maximo = valor;
 	}
-    return maximo;
+	return maximo;
 }
 
-void ordenarVecInt(int *vec, int largoVec) { //paso test
+void ordenarVecInt(int* vec, int largoVec) { //paso test
 	for (int i = 0; i < largoVec - 1; i++) {
 		for (int j = 0; j < largoVec - 1 - i; j++) {
 			if (vec[j] > vec[j + 1]) {
@@ -104,7 +200,7 @@ void ordenarVecInt(int *vec, int largoVec) { //paso test
 	}
 }
 
-int* intercalarVector(int* v1, int* v2, int l1, int l2){ // paso test
+int* intercalarVector(int* v1, int* v2, int l1, int l2) { // paso test
 	int l3 = l1 + l2;
 	if (l3 == 0) return NULL;
 	int* v3 = new int[l3];
@@ -116,7 +212,7 @@ int* intercalarVector(int* v1, int* v2, int l1, int l2){ // paso test
 			p2++;
 			continue;
 		}
-		else if (p2 >= l2){
+		else if (p2 >= l2) {
 			v3[i] = v1[p1];
 			p1++;
 			continue;
@@ -149,46 +245,25 @@ bool subconjuntoVector(int* v1, int* v2, int l1, int l2) // paso test
 
 char* invertirCase(char* str) // da error al compilar por alguna razon
 {
-	//int i = 0;
-	//while (str[i] != '\0') {
-	//	if (str[i] >= 'a' && str[i] <= 'z') {
-	//		int valor = (int)str[i];
-	//		valor -= 32;
-	//		str[i] = (char)valor;
-	//	}
-	//	else if (str[i] >= 'A' && str[i] <= 'Z') {
-	//		int valor = (int)str[i];
-	//		valor += 32;
-	//		str[i] = (char)valor;
-	//	}
-	//	i++;
-	//}
-	//return str;
-	return NULL;
-}
-/*
-PRE:  Recibe un mapa representado por una matriz, de dimensiones col x fil, en la cual 'A' representa un lugar donde hay agua, y 'T' donde hay tierra
-	  también recibe cuatro enteros, los primeros dos son las coordenadas (indices) de una 'T' y los siguientes dos son la cantidad de columnas y filas
-	  que tiene el mapa respectivamente.
-POS:  Modifica al mapa que se le ha pasado "explorando" toda la isla en la que se encuentre la 'T' que se le ha pasado, donde se encuentre una 'T',
-	  se pondrá una 'A'.
-	  */
-void explorarIsla(char** mapa, int i, int j, int col, int fil) { // funcion aux
-	mapa[i][j] = 'A';
-	for (int k = i - 1; k <= i + 1; k++) {
-		for (int l = j - 1; l <= j + 1; l++) {
-			if (k >= 0 && k < col && l >= 0 && l < fil) {
-				if (mapa[k][l] == 'T') {
-					explorarIsla(mapa, k, l, col, fil);
-				}
-			}
+	int largo = largoString(str); // por el '\0'
 
+	char* ret = new char[largo];
+	for (int i = 0; i < largo; i++) {
+		if (str[i] >= 'a' && str[i] <= 'z') {
+			ret[i] = str[i] - 32;
+		}
+		else if (str[i] >= 'A' && str[i] <= 'Z') {
+			ret[i] = str[i] + 32;
+		}
+		else {
+			ret[i] = str[i];
 		}
 	}
+	return ret;
 }
 
-int islas(char** mapa, int col, int fil){ //paso test
-	char** copiaMapa = new char*[col];
+int islas(char** mapa, int col, int fil) { //paso test
+	char** copiaMapa = new char* [col];
 
 	for (int i = 0; i < col; i++) {
 		copiaMapa[i] = new char[fil];
@@ -212,90 +287,19 @@ int islas(char** mapa, int col, int fil){ //paso test
 		delete[] copiaMapa[i];
 	}
 	delete[] copiaMapa;
-    return cantIslas;
-}
-/*
-PRE: Recibe dos strings
-
-POS: Devuelve en forma de booleano si el segundo string que se le pasa es un subString del primero 
-*/
-bool esSubstring(char* str, char* substr) { // funcion aux
-	int largosubstr = 0;
-	for (int z = 0; substr[z] != '\0'; z++) {
-		largosubstr++;
-	}
-
-	int vanSeguidas = 0;
-	for (int j = 0; j < largosubstr; j++) {
-		for (int i = j; str[i] != '\0'; i++) {
-			if (str[i] == substr[vanSeguidas]) {
-				vanSeguidas++;
-				if (vanSeguidas == largosubstr) {
-					return true;
-				}
-			}
-			else {
-				vanSeguidas = 0;
-			}
-		}
-	}
-	
-	return false;
+	return cantIslas;
 }
 
-unsigned int ocurrenciasSubstring(char **vecStr, int largoVecStr, char *substr)  // paso test
+unsigned int ocurrenciasSubstring(char** vecStr, int largoVecStr, char* substr)  // paso test
 {
 	int ocurrencias = 0;
 	for (int i = 0; i < largoVecStr; i++) {
 		if (esSubstring(vecStr[i], substr)) ocurrencias++;
 	}
-    return ocurrencias;
-}
-/*
-PRE: Recibe dos strings
-
-POS: Copia todos los caracteres del primer string al segundo, incluyendo el '\0'
-*/
-void copiarString(char* strOrigen, char* strDestino) { //funcion aux
-	int i = 0;
-	while (strOrigen[i] != '\0') {
-		strDestino[i] = strOrigen[i];
-		i++;
-	}
-	strDestino[i] = '\0';
+	return ocurrencias;
 }
 
-/*
-PRE: Recibe un string
-
-POS: Devuelve el largo del string incluyendo al caracter '\0'
-*/
-int largoString(char* str) { //función aux
-	int i = 0;
-	while (str[i] != '\0') {
-		i++;
-	}
-	i++;
-	return i;
-}
-
-/*
-PRE: Recibe dos strings
-
-POS: Devuelve true si el primer string "precede al segundo", en otro caso devuelve false
-*/
-bool ordenStr(char* str1, char* str2) { // funcion aux
-	int i = 0;
-	while (true) {
-		if (str1[i] == '\0' || str2[i] == '\0') return false;
-		if (str1[i] < str2[i]) return true;
-		if (str1[i] > str2[i]) return false;
-		i++;
-	}
-	return false;
-}
-
-char **ordenarVecStrings(char **vecStr, int largoVecStr)
+char** ordenarVecStrings(char** vecStr, int largoVecStr)
 {
 	char** nuevoVecStr = new char* [largoVecStr]; // array de strings a retornar ordenado
 
@@ -313,7 +317,7 @@ char **ordenarVecStrings(char **vecStr, int largoVecStr)
 			if (!indiceUsado && ordenStr(vecStr[i], vecStr[menorIndiceActual])) menorIndiceActual = i;
 		}
 
-		nuevoVecStr[indiceDestino] = new char [largoString(vecStr[menorIndiceActual])];
+		nuevoVecStr[indiceDestino] = new char[largoString(vecStr[menorIndiceActual])];
 		copiarString(vecStr[menorIndiceActual], nuevoVecStr[indiceDestino]);
 		indiceDestino++;
 	}
@@ -322,13 +326,13 @@ char **ordenarVecStrings(char **vecStr, int largoVecStr)
 	return nuevoVecStr;
 }
 
-char** splitStr(char* str, char separador, int &largoRet)
+char** splitStr(char* str, char separador, int& largoRet)
 {
 	// IMPLEMENTAR SOLUCION
 	return NULL;
 }
 
-void ordenarVecIntMergeSort(int* vector, int largo) 
+void ordenarVecIntMergeSort(int* vector, int largo)
 {
 	// IMPLEMENTAR SOLUCION
 }
